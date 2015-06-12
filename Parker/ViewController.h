@@ -23,6 +23,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *menuButtonContainer;
 @property (weak, nonatomic) IBOutlet UIButton *parkingLocationDetailAddButton;
 @property (weak, nonatomic) IBOutlet UITextView *parkingLocationDetailTextView;
+@property (weak, nonatomic) IBOutlet UIView *popup;
+@property (weak, nonatomic) IBOutlet UITextView *popupText;
+@property (weak, nonatomic) IBOutlet UIButton *popupNevermindButton;
+@property (weak, nonatomic) IBOutlet UIButton *popupSaveSpotButton;
 
 
 

@@ -20,6 +20,7 @@
 		660EC1BA1B2149C0006ADB9C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660EC1B91B2149C0006ADB9C /* CoreLocation.framework */; };
 		660EC1F21B2192EE006ADB9C /* man.png in Resources */ = {isa = PBXBuildFile; fileRef = 660EC1F11B2192EE006ADB9C /* man.png */; };
 		660EC1F41B2192F6006ADB9C /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 660EC1F31B2192F6006ADB9C /* menu.png */; };
+		665756FD1B2A600100CC62F4 /* CurrentParkingDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 665756FC1B2A600100CC62F4 /* CurrentParkingDetails.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,8 @@
 		660EC1B91B2149C0006ADB9C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		660EC1F11B2192EE006ADB9C /* man.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = man.png; sourceTree = "<group>"; };
 		660EC1F31B2192F6006ADB9C /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
+		665756FB1B2A600100CC62F4 /* CurrentParkingDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentParkingDetails.h; sourceTree = "<group>"; };
+		665756FC1B2A600100CC62F4 /* CurrentParkingDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentParkingDetails.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +107,8 @@
 				660EC1911B2141AD006ADB9C /* AppDelegate.m */,
 				660EC1961B2141AD006ADB9C /* ViewController.h */,
 				660EC1971B2141AD006ADB9C /* ViewController.m */,
+				665756FB1B2A600100CC62F4 /* CurrentParkingDetails.h */,
+				665756FC1B2A600100CC62F4 /* CurrentParkingDetails.m */,
 				660EC1991B2141AD006ADB9C /* Main.storyboard */,
 				660EC19C1B2141AD006ADB9C /* Images.xcassets */,
 				660EC19E1B2141AD006ADB9C /* LaunchScreen.xib */,
@@ -254,6 +259,7 @@
 				660EC18F1B2141AD006ADB9C /* main.m in Sources */,
 				660EC1981B2141AD006ADB9C /* ViewController.m in Sources */,
 				660EC1951B2141AD006ADB9C /* Parker.xcdatamodeld in Sources */,
+				665756FD1B2A600100CC62F4 /* CurrentParkingDetails.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,6 +452,7 @@
 				660EC1B11B2141AE006ADB9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		660EC1B21B2141AE006ADB9C /* Build configuration list for PBXNativeTarget "ParkerTests" */ = {
 			isa = XCConfigurationList;
@@ -454,6 +461,7 @@
 				660EC1B41B2141AE006ADB9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

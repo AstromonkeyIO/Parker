@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "CurrentParkingDetails.h"
 #define METERS_PER_MILE 1609.344
 
 @interface ViewController ()
@@ -15,8 +16,7 @@
 @property (nonatomic, retain) CLGeocoder* geocoder;
 @property (strong, nonatomic) NSString* currentParkingState;
 @property (strong, nonatomic) MKPointAnnotation* currentParkingAnnotation;
-
-
+@property (strong, nonatomic) CurrentParkingDetails* currentParkingDetails;
 
 @end
 
@@ -91,6 +91,12 @@
     self.menuButtonContainer.clipsToBounds = YES;
     
     
+    self.popup.layer.borderWidth=1.0f;
+    self.popup.layer.borderColor= [[UIColor colorWithRed: 169/255.0 green: 169/255.0 blue: 169/255.0 alpha:0.5] CGColor];
+    self.popup.layer.cornerRadius = 10;
+    self.popup.layer.masksToBounds = YES;
+    
+    
 }
 
 - (void) viewDidLoad
@@ -119,6 +125,7 @@
     self.parkingLocationDetailTextView.delegate = self;
     
     self.currentParkingAnnotation = [[MKPointAnnotation alloc] init];
+    self.currentParkingDetails = [[CurrentParkingDetails alloc] init];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary* savedCurrentParkingCoordinates = [defaults objectForKey:@"savedCurrentParkingCoordinates"];
@@ -265,6 +272,8 @@
         self.currentParkingAnnotation.coordinate = annotationCoord;
         [_mapView addAnnotation:self.currentParkingAnnotation];
         
+        self.currentParkingDetails.latitue = self.locationManager.location.coordinate.latitude;
+        self.currentParkingDetails.longitude = self.locationManager.location.coordinate.longitude;
         
         NSDictionary* savedCurrentParkingCoordinates = @{ @"latitude" : [ NSNumber numberWithDouble: self.locationManager.location.coordinate.latitude], @"longitude" : [NSNumber numberWithDouble: self.locationManager.location.coordinate.longitude]};
         
@@ -286,6 +295,7 @@
                 CLPlacemark* placemark = [placemarks lastObject];
                 
                 NSString* parkingAddressString = [NSString stringWithFormat:@"%@ %@", placemark.subThoroughfare, placemark.thoroughfare];
+                self.currentParkingDetails.zipcode = placemark.postalCode;
                 [self.parkingAddressButton setTitle:parkingAddressString forState:UIControlStateNormal];
                 
             } else {
@@ -298,25 +308,112 @@
     else
     {
         
-        [self.mapView removeAnnotation:self.currentParkingAnnotation];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"savedCurrentParkingCoordinates"];
-        //[[NSUserDefaults] synchronize];
-        [self.mapView removeOverlays:self.mapView.overlays];
+        if(self.popup.hidden == YES)
+        {
         
-        self.currentParkingState = @"unparked";
-        [self.parkButton setTitle:@"PARK" forState:UIControlStateNormal];
-        [self.parkButton setBackgroundColor:[UIColor colorWithRed:109/255.0 green:255/255.0 blue:171/255.0 alpha:1]];
-        [self.parkingAddressButton setTitle:@"" forState:UIControlStateNormal];
-        self.parkingAddressButton.hidden = YES;
+            self.parkingLocationDetailTextView.hidden = YES;
+            [self.parkingLocationDetailAddButton setTitle:@"+" forState:UIControlStateNormal];
+            self.parkingLocationDetailAddButton.enabled = NO;
+            
+            self.popup.alpha = 0.0f;
+            self.popup.hidden = NO;
+            [UIView animateWithDuration:0.5 animations:^() {
+                self.popup.alpha = 1.0f;
+            }];
+            
+        }
+        else
+        {
+            
+            [UIView animateWithDuration:1 animations:^() {
+                self.popup.alpha = 0.0f;
+                self.popup.hidden = YES;
+            }];
+            
+            self.parkingLocationDetailAddButton.enabled = YES;
+            
+            [self.mapView removeAnnotation:self.currentParkingAnnotation];
+             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"savedCurrentParkingCoordinates"];
+             //[[NSUserDefaults] synchronize];
+            [self.mapView removeOverlays:self.mapView.overlays];
+            self.currentParkingState = @"unparked";
+            [self.parkButton setTitle:@"PARK" forState:UIControlStateNormal];
+            [self.parkButton setBackgroundColor:[UIColor colorWithRed:109/255.0 green:255/255.0 blue:171/255.0 alpha:1]];
+            [self.parkingAddressButton setTitle:@"" forState:UIControlStateNormal];
+            self.parkingAddressButton.hidden = YES;
+             
+            self.parkingLocationDetailTextView.text = @"";
+            self.parkingLocationDetailAddButton.hidden = YES;
+            self.parkingLocationDetailTextView.hidden = YES;
+            
+            
+        }
         
-        self.parkingLocationDetailTextView.text = @"";
-        self.parkingLocationDetailAddButton.hidden = YES;
-        
-        self.parkingLocationDetailTextView.hidden = YES;
+
         
     }
     
 }
+
+- (IBAction)nevermindButtonPressed:(id)sender {
+
+    
+    self.parkingLocationDetailAddButton.enabled = YES;
+    
+    self.popup.alpha = 1.0f;
+    [UIView animateWithDuration:0.5 animations:^() {
+        self.popup.alpha = 0.0f;
+        self.popup.hidden = YES;
+    }];
+    
+    
+    
+}
+
+- (IBAction)saveSpotButtonPressed:(id)sender {
+
+    
+    if(self.currentParkingDetails.zipcode)
+    {
+        
+        NSUserDefaults* userDefaults = [NSUserDefaults  standardUserDefaults];
+        NSMutableArray* zipcodeArray = [userDefaults objectForKey:self.currentParkingDetails.zipcode];
+        
+        if(zipcodeArray)
+        {
+            
+            [zipcodeArray addObject:self.currentParkingDetails];
+            [userDefaults setObject:zipcodeArray forKey:self.currentParkingDetails.zipcode];
+            [userDefaults synchronize];
+            
+            [self transformPopupAfterPressingSaveSpotButton];
+            
+
+            
+            
+        }
+        else
+        {
+        
+            NSMutableArray* newZipcodeArray = [[NSMutableArray alloc] init];
+            [newZipcodeArray addObject:self.currentParkingDetails];
+            //[userDefaults setObject:newZipcodeArray forKey:self.currentParkingDetails.zipcode];
+            //[userDefaults synchronize];
+            
+            [self transformPopupAfterPressingSaveSpotButton];
+            
+        }
+    
+    }
+    else
+    {
+        
+        
+        
+    }
+
+}
+
 
 - (IBAction)currentLocationButtonPressed:(id)sender
 {
@@ -512,6 +609,55 @@
     return YES;
 }
 
+- (void) transformPopupAfterPressingSaveSpotButton
+{
+    
+    self.popupText.backgroundColor = [UIColor colorWithRed: 109/255.0 green: 255/255.0 blue: 171/255.0 alpha:1.0];
+    self.popupText.textColor = [UIColor whiteColor];
+    self.popupText.text = @"Parking spot saved!";
+    self.popupNevermindButton.hidden = YES;
+    self.popupSaveSpotButton.hidden = YES;
+    self.popup.backgroundColor = [UIColor colorWithRed: 109/255.0 green: 255/255.0 blue: 171/255.0 alpha:1.0];
+    [self performSelector:@selector(dismissPopup) withObject:nil afterDelay:2.0 ];
+    
+    
+}
+
+- (void) dismissPopup
+{
+    
+    [UIView animateWithDuration:0.5 animations:^() {
+        self.popup.alpha = 0.0f;
+        self.popup.hidden = YES;
+        self.popup.backgroundColor = [UIColor whiteColor];
+        self.popupText.backgroundColor = [UIColor whiteColor];
+        self.popupText.textColor = [UIColor blackColor];
+        self.popupText.text = @"Tab \"Leave\" button again to leave or select other options";
+        self.popupNevermindButton.hidden = NO;
+        self.popupSaveSpotButton.hidden = NO;
+        
+        self.parkingLocationDetailAddButton.enabled = YES;
+        
+        [self.mapView removeAnnotation:self.currentParkingAnnotation];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"savedCurrentParkingCoordinates"];
+        //[[NSUserDefaults] synchronize];
+        [self.mapView removeOverlays:self.mapView.overlays];
+        self.currentParkingState = @"unparked";
+        [self.parkButton setTitle:@"PARK" forState:UIControlStateNormal];
+        [self.parkButton setBackgroundColor:[UIColor colorWithRed:109/255.0 green:255/255.0 blue:171/255.0 alpha:1]];
+        [self.parkingAddressButton setTitle:@"" forState:UIControlStateNormal];
+        self.parkingAddressButton.hidden = YES;
+        
+        self.parkingLocationDetailTextView.text = @"";
+        self.parkingLocationDetailAddButton.hidden = YES;
+        self.parkingLocationDetailTextView.hidden = YES;
+        
+        
+        
+    }];
+    
+    
+}
 
 
 
