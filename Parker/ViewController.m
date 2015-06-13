@@ -272,7 +272,7 @@
         self.currentParkingAnnotation.coordinate = annotationCoord;
         [_mapView addAnnotation:self.currentParkingAnnotation];
         
-        self.currentParkingDetails.latitue = self.locationManager.location.coordinate.latitude;
+        self.currentParkingDetails.latitude = self.locationManager.location.coordinate.latitude;
         self.currentParkingDetails.longitude = self.locationManager.location.coordinate.longitude;
         
         NSDictionary* savedCurrentParkingCoordinates = @{ @"latitude" : [ NSNumber numberWithDouble: self.locationManager.location.coordinate.latitude], @"longitude" : [NSNumber numberWithDouble: self.locationManager.location.coordinate.longitude]};
@@ -357,15 +357,18 @@
 
 - (IBAction)nevermindButtonPressed:(id)sender {
 
-    
+
     self.parkingLocationDetailAddButton.enabled = YES;
     
     self.popup.alpha = 1.0f;
     [UIView animateWithDuration:0.5 animations:^() {
         self.popup.alpha = 0.0f;
-        self.popup.hidden = YES;
-    }];
+
+    } completion:^(BOOL finished) {
     
+        self.popup.hidden = YES;
+    
+    }];
     
     
 }
@@ -377,30 +380,48 @@
     {
         
         NSUserDefaults* userDefaults = [NSUserDefaults  standardUserDefaults];
-        NSMutableArray* zipcodeArray = [userDefaults objectForKey:self.currentParkingDetails.zipcode];
+        NSData * zipcodeData = [[[NSUserDefaults standardUserDefaults] objectForKey:self.currentParkingDetails.zipcode] mutableCopy];
+        NSMutableArray* zipcodeArray = [NSKeyedUnarchiver unarchiveObjectWithData:zipcodeData];
+        NSLog(@"zipcodeArray %@", zipcodeArray);
+        //NSMutableArray* zipcodeArray = [[userDefaults objectForKey:self.currentParkingDetails.zipcode] mutableCopy];
         
         if(zipcodeArray)
         {
             
+            NSLog(@"already saved!!!");
+            
+            CurrentParkingDetails* cpd = [zipcodeArray objectAtIndex:0];
+            NSLog(@"%f", cpd.latitude);
+            
+            NSLog(@"zipcodeArray %@", zipcodeArray);
+            
+            NSLog(@"lat %@", [zipcodeArray objectAtIndex:0]);
             [zipcodeArray addObject:self.currentParkingDetails];
-            [userDefaults setObject:zipcodeArray forKey:self.currentParkingDetails.zipcode];
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:zipcodeArray];
+            [userDefaults setObject:data forKey:self.currentParkingDetails.zipcode];
             [userDefaults synchronize];
             
-            [self transformPopupAfterPressingSaveSpotButton];
             
-
-            
+            [self showParkingSpotSavedSuccessMessage];
             
         }
         else
         {
-        
-            NSMutableArray* newZipcodeArray = [[NSMutableArray alloc] init];
-            [newZipcodeArray addObject:self.currentParkingDetails];
-            //[userDefaults setObject:newZipcodeArray forKey:self.currentParkingDetails.zipcode];
-            //[userDefaults synchronize];
             
-            [self transformPopupAfterPressingSaveSpotButton];
+            NSLog(@"not already saved!!!");
+
+            NSMutableArray* newZipcodeArray = [[NSMutableArray alloc] init];
+            
+            //NSData *data = [NSKeyedArchiver archivedDataWithRootObject:myArray];
+            //[defaults setObject:data forKey:keyName];
+
+            [newZipcodeArray addObject:self.currentParkingDetails];
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:newZipcodeArray];
+            [userDefaults setObject:data forKey:self.currentParkingDetails.zipcode];
+            //[userDefaults setObject:newZipcodeArray forKey:self.currentParkingDetails.zipcode];
+            [userDefaults synchronize];
+            
+            [self showParkingSpotSavedSuccessMessage];
             
         }
     
@@ -609,6 +630,72 @@
     return YES;
 }
 
+- (void) showParkingSpotSavedSuccessMessage
+{
+    
+    [UIView animateWithDuration:0.5 animations:^()
+     {
+         
+         self.popup.alpha = 0.0f;
+         
+     }
+                     completion:^(BOOL finished)
+     {
+         
+         self.popup.hidden = YES;
+         self.popup.backgroundColor = [UIColor whiteColor];
+         self.popupText.backgroundColor = [UIColor whiteColor];
+         self.popupText.textColor = [UIColor blackColor];
+         self.popupText.text = @"Tab \"Leave\" button again to leave or select other options";
+         self.popupNevermindButton.hidden = NO;
+         self.popupSaveSpotButton.hidden = NO;
+         
+         self.parkingLocationDetailAddButton.enabled = YES;
+         
+         [self.mapView removeAnnotation:self.currentParkingAnnotation];
+         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"savedCurrentParkingCoordinates"];
+         //[[NSUserDefaults] synchronize];
+         [self.mapView removeOverlays:self.mapView.overlays];
+         self.currentParkingState = @"unparked";
+         [self.parkButton setTitle:@"PARK" forState:UIControlStateNormal];
+         [self.parkButton setBackgroundColor:[UIColor colorWithRed:109/255.0 green:255/255.0 blue:171/255.0 alpha:1]];
+         [self.parkingAddressButton setTitle:@"" forState:UIControlStateNormal];
+         self.parkingAddressButton.hidden = YES;
+         
+         self.parkingLocationDetailTextView.text = @"";
+         self.parkingLocationDetailAddButton.hidden = YES;
+         self.parkingLocationDetailTextView.hidden = YES;
+         
+         self.parkingSpotSavedSuccessMessage.alpha = 0.0f;
+         self.parkingSpotSavedSuccessMessage.hidden = NO;
+         [UIView animateWithDuration:1.2 animations:^()
+          {
+              
+              self.parkingSpotSavedSuccessMessage.alpha = 1.0f;
+              
+          } completion:^(BOOL finished)
+          {
+              
+              [UIView animateWithDuration:1 animations:^()
+               {
+                   self.parkingSpotSavedSuccessMessage.alpha = 0.0f;
+                   //self.popup.hidden = YES;
+               } completion:^(BOOL finished)
+               {
+                   
+                   self.parkingSpotSavedSuccessMessage.hidden = YES;
+                   
+               }];
+              
+              
+          }];
+         
+     }];
+    
+    
+}
+
+/*
 - (void) transformPopupAfterPressingSaveSpotButton
 {
     
@@ -622,42 +709,8 @@
     
     
 }
+*/
 
-- (void) dismissPopup
-{
-    
-    [UIView animateWithDuration:0.5 animations:^() {
-        self.popup.alpha = 0.0f;
-        self.popup.hidden = YES;
-        self.popup.backgroundColor = [UIColor whiteColor];
-        self.popupText.backgroundColor = [UIColor whiteColor];
-        self.popupText.textColor = [UIColor blackColor];
-        self.popupText.text = @"Tab \"Leave\" button again to leave or select other options";
-        self.popupNevermindButton.hidden = NO;
-        self.popupSaveSpotButton.hidden = NO;
-        
-        self.parkingLocationDetailAddButton.enabled = YES;
-        
-        [self.mapView removeAnnotation:self.currentParkingAnnotation];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"savedCurrentParkingCoordinates"];
-        //[[NSUserDefaults] synchronize];
-        [self.mapView removeOverlays:self.mapView.overlays];
-        self.currentParkingState = @"unparked";
-        [self.parkButton setTitle:@"PARK" forState:UIControlStateNormal];
-        [self.parkButton setBackgroundColor:[UIColor colorWithRed:109/255.0 green:255/255.0 blue:171/255.0 alpha:1]];
-        [self.parkingAddressButton setTitle:@"" forState:UIControlStateNormal];
-        self.parkingAddressButton.hidden = YES;
-        
-        self.parkingLocationDetailTextView.text = @"";
-        self.parkingLocationDetailAddButton.hidden = YES;
-        self.parkingLocationDetailTextView.hidden = YES;
-        
-        
-        
-    }];
-    
-    
-}
 
 
 

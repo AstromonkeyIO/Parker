@@ -137,6 +137,18 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iyg-Id-dBs">
+                                <rect key="frame" x="16" y="84" width="288" height="42"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Parking Spot Saved!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MTf-hv-Vpa">
+                                        <rect key="frame" x="12" y="8" width="264" height="29"/>
+                                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.42745098039215684" green="1" blue="0.6705882352941176" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -151,6 +163,7 @@
                         <outlet property="parkingAddressButton" destination="0iB-QX-lix" id="hIq-PS-s3f"/>
                         <outlet property="parkingLocationDetailAddButton" destination="A4O-4K-k7D" id="8aF-oS-Msf"/>
                         <outlet property="parkingLocationDetailTextView" destination="6k2-H3-aDj" id="t4Z-MB-VPt"/>
+                        <outlet property="parkingSpotSavedSuccessMessage" destination="Iyg-Id-dBs" id="iog-M1-wSz"/>
                         <outlet property="popup" destination="qHC-8M-NYb" id="8Xs-Ww-6VN"/>
                         <outlet property="popupNevermindButton" destination="Js5-KL-6qY" id="VcL-jW-tci"/>
                         <outlet property="popupSaveSpotButton" destination="Euf-aK-ON0" id="14X-ul-Wbs"/>

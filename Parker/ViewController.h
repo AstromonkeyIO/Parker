@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *popupText;
 @property (weak, nonatomic) IBOutlet UIButton *popupNevermindButton;
 @property (weak, nonatomic) IBOutlet UIButton *popupSaveSpotButton;
+@property (weak, nonatomic) IBOutlet UIView *parkingSpotSavedSuccessMessage;
 
 
 

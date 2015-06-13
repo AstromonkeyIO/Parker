@@ -8,10 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CurrentParkingDetails : NSObject
+@interface CurrentParkingDetails : NSObject <NSCoding> {
+    
+    double latitude;
+    double longitude;
+    NSString* zipcode;
+    
+}
 
-@property (nonatomic) double latitue;
+@property (nonatomic) double latitude;
 @property (nonatomic) double longitude;
-@property (strong, nonatomic) NSString* zipcode;
+@property (nonatomic ,copy) NSString* zipcode;
 
 @end
