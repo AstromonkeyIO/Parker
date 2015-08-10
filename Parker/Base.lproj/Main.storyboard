@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -24,7 +24,7 @@
                                 <rect key="frame" x="92" y="412" width="136" height="136"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aEL-Mr-1JS">
@@ -37,20 +37,22 @@
                                 </state>
                                 <connections>
                                     <action selector="parkButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Cfy-9K-9s2"/>
+                                    <action selector="parkButtonPressedDown:" destination="vXZ-lx-hvc" eventType="touchDown" id="FJx-yB-Pdo"/>
+                                    <action selector="parkingButtonTouchCancel:" destination="vXZ-lx-hvc" eventType="touchCancel" id="PlX-Qr-qNv"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Orc-wt-8th">
                                 <rect key="frame" x="14" y="454" width="56" height="56"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZQV-AI-U3l">
                                 <rect key="frame" x="19" y="459" width="46" height="46"/>
-                                <color key="backgroundColor" red="0.40000000596046448" green="0.80000001192092896" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.53004807692307687" green="0.80000000000000004" blue="1" alpha="0.70000000000000007" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
-                                <state key="normal" title="Me">
+                                <state key="normal" image="locationIcon.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -73,14 +75,14 @@
                                 <rect key="frame" x="14" y="20" width="56" height="56"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XtX-Et-WQl">
                                 <rect key="frame" x="19" y="25" width="46" height="46"/>
                                 <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="0.70000000000000007" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
-                                <state key="normal" title="M">
+                                <state key="normal" image="whiteMenuIcon.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
@@ -137,18 +139,18 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iyg-Id-dBs">
-                                <rect key="frame" x="16" y="84" width="288" height="42"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Parking Spot Saved!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MTf-hv-Vpa">
-                                        <rect key="frame" x="12" y="8" width="264" height="29"/>
-                                        <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.42745098039215684" green="1" blue="0.6705882352941176" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qHx-0S-i2a">
+                                <rect key="frame" x="258" y="459" width="46" height="46"/>
+                                <color key="backgroundColor" red="0.42743571154703042" green="1" blue="0.67064568767069055" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Avenir-Roman" family="Avenir" pointSize="18"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="messageButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="v0g-dh-Wqp"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -158,12 +160,12 @@
                         <outlet property="mapView" destination="yva-r2-R4W" id="mMZ-5u-vR2"/>
                         <outlet property="menuButton" destination="XtX-Et-WQl" id="eM7-aS-QA7"/>
                         <outlet property="menuButtonContainer" destination="Lf6-Oo-Adl" id="j0J-tP-n0t"/>
+                        <outlet property="messageButton" destination="qHx-0S-i2a" id="pTL-oj-X1u"/>
                         <outlet property="parkButton" destination="aEL-Mr-1JS" id="Nvy-dX-iX7"/>
                         <outlet property="parkButtonContainer" destination="YWs-G6-DWI" id="7XX-B6-cOp"/>
                         <outlet property="parkingAddressButton" destination="0iB-QX-lix" id="hIq-PS-s3f"/>
                         <outlet property="parkingLocationDetailAddButton" destination="A4O-4K-k7D" id="8aF-oS-Msf"/>
                         <outlet property="parkingLocationDetailTextView" destination="6k2-H3-aDj" id="t4Z-MB-VPt"/>
-                        <outlet property="parkingSpotSavedSuccessMessage" destination="Iyg-Id-dBs" id="iog-M1-wSz"/>
                         <outlet property="popup" destination="qHC-8M-NYb" id="8Xs-Ww-6VN"/>
                         <outlet property="popupNevermindButton" destination="Js5-KL-6qY" id="VcL-jW-tci"/>
                         <outlet property="popupSaveSpotButton" destination="Euf-aK-ON0" id="14X-ul-Wbs"/>
@@ -175,6 +177,10 @@
             <point key="canvasLocation" x="160" y="255"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="locationIcon.png" width="20" height="20"/>
+        <image name="whiteMenuIcon.png" width="20" height="20"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

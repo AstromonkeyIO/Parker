@@ -96,6 +96,8 @@
     self.popup.layer.cornerRadius = 10;
     self.popup.layer.masksToBounds = YES;
     
+    self.menuButton.imageView.image = [self.menuButton.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.menuButton setTintColor:[UIColor colorWithRed: 102.0/255.0 green: 204.0/255.0 blue:255.0/255.0 alpha: 1.0]];
     
 }
 
@@ -145,14 +147,14 @@
         
         self.currentParkingState = @"parked";
         [self.parkButton setTitle:@"LEAVE" forState:UIControlStateNormal];
-        [self.parkButton setBackgroundColor:[UIColor colorWithRed:255/255.0 green:49/255.0 blue:47/255.0 alpha:1]];
+        [self.parkButton setBackgroundColor:[UIColor colorWithRed:255/255.0 green:102/255.0 blue:102/255.0 alpha:1]];
         
         self.parkingAddressButton.hidden = NO;
         self.parkingLocationDetailAddButton.hidden = NO;
         
         self.parkingLocationDetailTextView.text = savedCurrentParkingCoordinates[@"detail"];
         
-        [self.parkingAddressButton setTitle:@"Searching Location..." forState:UIControlStateNormal];
+        [self.parkingAddressButton setTitle:@"My Parking Spot!" forState:UIControlStateNormal];
         
         CLLocation *parkingLocation = [[CLLocation alloc] initWithLatitude:self.currentParkingAnnotation.coordinate.latitude longitude:self.currentParkingAnnotation.coordinate.longitude];
         [self.geocoder reverseGeocodeLocation:parkingLocation completionHandler:^(NSArray *placemarks, NSError *error) {
@@ -246,6 +248,102 @@
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 1000, 1000);
     [_mapView setRegion:viewRegion animated:YES];
     */
+    
+    
+    __block CLPlacemark* placemark;
+    
+    if(!(self.currentParkingDetails.latitude && self.currentParkingDetails.longitude))
+    {
+        
+        [self.geocoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error)
+        {
+            
+            NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
+            if (error == nil && [placemarks count] > 0)
+            {
+                
+                
+                CLPlacemark* tempPlacemark = [placemarks lastObject];
+                
+                NSLog(@"placemark %@", placemark.postalCode);
+                NSLog(@"tempPlacemark %@", tempPlacemark.postalCode);
+                //if(placemark.postalCode != tempPlacemark.postalCode)
+                //{
+                if(self.messageButton.hidden == YES)
+                {
+                    
+                    placemark = tempPlacemark;
+                    NSLog(@"%@", placemark.postalCode);
+                
+                //NSUserDefaults* userDefaults = [NSUserDefaults  standardUserDefaults];
+                    NSData * zipcodeData = [[[NSUserDefaults standardUserDefaults] objectForKey:placemark.postalCode] mutableCopy];
+                    NSMutableArray* zipcodeArray = [NSKeyedUnarchiver unarchiveObjectWithData:zipcodeData];
+                    NSLog(@"zipcodeArray %@", zipcodeArray);
+                    if(zipcodeArray)
+                    {
+                    
+                        NSLog(@"yo already saved!!!");
+                        
+                    //CurrentParkingDetails* cpd = [zipcodeArray objectAtIndex:0];
+                    NSString* messageString = [NSString stringWithFormat:@"%lu sweet spots in this area!", (unsigned long)[zipcodeArray count]];
+                    self.messageButton.alpha = 0.0f;
+                    [self.messageButton setTitle:messageString forState:UIControlStateNormal];
+                    //self.messageButton.hidden = NO;
+                    [UIButton animateWithDuration:1.2 animations:^()
+                     {
+                         
+                         self.messageButton.alpha = 1.0f;
+                         
+                         
+                     } completion:^(BOOL finished)
+                     {
+                        
+                         /*
+                         [UIButton animateWithDuration:1 animations:^()
+                          {
+                              self.messageButton.alpha = 0.0f;
+                              //self.popup.hidden = YES;
+                          } completion:^(BOOL finished)
+                          {
+                              
+                              self.messageButton.hidden = YES;
+                              
+                          }];
+                          */
+                         
+                         
+                     }];
+                        
+                    for(int i = 0; i < [zipcodeArray count]; i++)
+                    {
+                        
+                        CurrentParkingDetails* cpd = [zipcodeArray objectAtIndex:i];
+                        CLLocationCoordinate2D annotationCoord;
+                        annotationCoord.latitude = cpd.latitude;                        annotationCoord.longitude = cpd.longitude;
+                        MKPointAnnotation* annotation = [[MKPointAnnotation alloc] init];
+                        annotation.coordinate = annotationCoord;
+                        [_mapView addAnnotation:annotation];
+                        
+                    }
+                    
+
+                    
+                }
+                
+  
+            }
+            else
+            {
+                
+                NSLog(@"%@", error.debugDescription);
+                
+            }
+                
+        }
+        
+        }];
+    }
+    
 
 }
 
@@ -259,10 +357,68 @@
     
 }
 
+- (IBAction)parkButtonPressedDown:(id)sender
+{
+    
+    /*
+    [UIView animateWithDuration:0.6 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^
+    {
+        self.parkButton.transform = CGAffineTransformMakeScale(0.8,0.8);
+        self.parkButtonContainer.transform = CGAffineTransformMakeScale(0.8,0.8);
+        
+    } completion:^(BOOL finished)
+    {
+
+    }];
+    */
+}
+
+
+- (IBAction)parkingButtonTouchCancel:(id)sender
+{
+    
+    
+}
 
 - (IBAction)parkButtonPressed:(id)sender
 {
-    
+
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^
+     {
+         self.parkButton.transform = CGAffineTransformMakeScale(0.8,0.8);
+         self.parkButtonContainer.transform = CGAffineTransformMakeScale(0.8,0.8);
+         
+     } completion:^(BOOL finished)
+     {
+         
+         
+         [UIView animateWithDuration:0.12 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^
+          {
+              
+              self.parkButton.transform = CGAffineTransformMakeScale(1.2,1.2);
+              self.parkButtonContainer.transform = CGAffineTransformMakeScale(1.2,1.2);
+              
+          } completion:^(BOOL finished)
+          {
+              
+              
+              [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^
+               {
+                   
+                   self.parkButton.transform = CGAffineTransformMakeScale(1,1);
+                   self.parkButtonContainer.transform = CGAffineTransformMakeScale(1,1);
+                   
+               } completion:^(BOOL finished)
+               {
+                   
+                   
+               }];
+              
+            
+          }];
+         
+     }];
+
     if([self.currentParkingState isEqualToString:@"unparked"])
     {
         
@@ -284,11 +440,11 @@
         
         self.currentParkingState = @"parked";
         [self.parkButton setTitle:@"LEAVE" forState:UIControlStateNormal];
-        [self.parkButton setBackgroundColor:[UIColor colorWithRed:255/255.0 green:49/255.0 blue:47/255.0 alpha:1]];
+        [self.parkButton setBackgroundColor:[UIColor colorWithRed:255/255.0 green:102/255.0 blue:102/255.0 alpha:1]];
  
         self.parkingAddressButton.hidden = NO;
         self.parkingLocationDetailAddButton.hidden = NO;
-        [self.parkingAddressButton setTitle:@"Searching Location..." forState:UIControlStateNormal];
+        [self.parkingAddressButton setTitle:@"My Parking Spot!" forState:UIControlStateNormal];
         [self.geocoder reverseGeocodeLocation:self.locationManager.location completionHandler:^(NSArray *placemarks, NSError *error) {
             NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
             if (error == nil && [placemarks count] > 0) {
@@ -504,7 +660,7 @@
                 
 
             
-            /**
+            /*
             [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
                 if (error) {
                     NSLog(@"Error %@", error.description);
@@ -517,7 +673,7 @@
                     
                     
                     
-                    /*
+             
                     self.destinationLabel.text = [placemark.addressDictionary objectForKey:@"Street"];
                     self.distanceLabel.text = [NSString stringWithFormat:@"%0.1f Miles", routeDetails.distance/1609.344];
                     self.transportLabel.text = [NSString stringWithFormat:@"%u" ,routeDetails.transportType];
@@ -600,8 +756,8 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     
-    if([text isEqualToString:@"\n"]) {
-        
+    if([text isEqualToString:@"\n"])
+    {
         
         self.parkingLocationDetailTextView.hidden = YES;
         [self.parkingLocationDetailAddButton setTitle:@"+" forState:UIControlStateNormal];
@@ -612,7 +768,6 @@
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             NSDictionary* savedCurrentParkingCoordinates = [defaults objectForKey:@"savedCurrentParkingCoordinates"];
 
-            
             NSNumber* latitude = savedCurrentParkingCoordinates[@"latitude"];
             NSNumber* longitude = savedCurrentParkingCoordinates[@"longitude"];
             
@@ -628,6 +783,7 @@
     }
     
     return YES;
+    
 }
 
 - (void) showParkingSpotSavedSuccessMessage
@@ -639,7 +795,7 @@
          self.popup.alpha = 0.0f;
          
      }
-                     completion:^(BOOL finished)
+     completion:^(BOOL finished)
      {
          
          self.popup.hidden = YES;
@@ -666,6 +822,34 @@
          self.parkingLocationDetailAddButton.hidden = YES;
          self.parkingLocationDetailTextView.hidden = YES;
          
+         self.messageButton.alpha = 0.0f;
+         [self.messageButton setTitle:@"Parking spot saved!" forState:UIControlStateNormal];
+         self.messageButton.hidden = NO;
+         [UIButton animateWithDuration:1.2 animations:^()
+          {
+              
+              self.messageButton.alpha = 1.0f;
+              
+          } completion:^(BOOL finished)
+          {
+              
+              [UIButton animateWithDuration:1 animations:^()
+               {
+                   self.messageButton.alpha = 0.0f;
+                   //self.popup.hidden = YES;
+               } completion:^(BOOL finished)
+               {
+                   
+                   self.messageButton.hidden = YES;
+                   
+               }];
+              
+              
+          }];
+         
+        }];
+         
+         /*
          self.parkingSpotSavedSuccessMessage.alpha = 0.0f;
          self.parkingSpotSavedSuccessMessage.hidden = NO;
          [UIView animateWithDuration:1.2 animations:^()
@@ -689,8 +873,25 @@
               
               
           }];
+          
          
      }];
+    */
+    
+    
+}
+
+- (IBAction)messageButtonPressed:(id)sender
+{
+    
+    
+    CLLocationCoordinate2D annotationCoord;
+    annotationCoord.latitude = self.locationManager.location.coordinate.latitude;
+    annotationCoord.longitude = self.locationManager.location.coordinate.longitude;
+    self.currentParkingAnnotation.coordinate = annotationCoord;
+    [_mapView addAnnotation:self.currentParkingAnnotation];
+    
+    
     
     
 }
